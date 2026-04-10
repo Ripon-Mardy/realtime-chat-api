@@ -16,6 +16,8 @@ const io = new Server(server, {
   cors: { origin: "*" },
 });
 
+app.set("io", io);
+
 const PORT = process.env.PORT || 5000;
 
 server.listen(PORT, () => {

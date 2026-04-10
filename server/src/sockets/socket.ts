@@ -25,6 +25,14 @@ export const initSocket = (io: Server) => {
 
     socket.on("disconnect", () => {
       console.log("user disconnected");
+
+      // remove user from map
+      for (const [userId, socketId] of onlineUsers.entries()) {
+        if (socketId === socket.id) {
+          onlineUsers.delete(userId);
+          break;
+        }
+      }
     });
   }); // end io.on
 };

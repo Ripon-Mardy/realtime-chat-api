@@ -16,6 +16,8 @@ export const sendMessage = async (req: Request, res: Response) => {
       text,
     });
 
+    req.app.get("io").to(receiver).emit("receive_message", message);
+
     res.status(201).json({
       message: "Message sent successfully",
       data: message,
