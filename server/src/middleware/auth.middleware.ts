@@ -1,20 +1,39 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
-export const protect = (req: Request, res: Response, next: NextFunction) => {
+interface AuthRequest extends Request {
+  user?: {
+    id: string;
+  };
+}
+
+export const protect = (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
-    const token = req.headers.authorization?.split(" ")[1];
-    console.log("middleware Token", token);
+    const token = req.cookies?.token;
+
     if (!token) {
-      return res.status(401).json({ message: "Not authorized, no token" });
+      return res
+        .status(401)
+        .json({ message: "Not logged in . Please login first" });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
+    // verify token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as {
+      id: string;
+    };
 
-    (req as any).user = decoded;
+    req.user = {
+      id: decoded.id,
+    };
 
     next();
   } catch (error) {
-    res.status(401).json({ message: "Unauthorized" });
+    return res
+      .status(401)
+      .json({ message: "Session expired. Please login again" });
   }
 };

@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import authRoutes from "./routes/auth.routes";
 import messageRoutes from "./routes/message.routes";
 import usersRoutes from "./routes/users.routes";
+import { protect } from "./middleware/auth.middleware";
 
 const app = express();
 
