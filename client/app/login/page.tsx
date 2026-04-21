@@ -2,12 +2,16 @@
 
 import { useState } from "react";
 import { api } from "@/lib/api";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  // router
+  const router = useRouter();
 
   const handleLoginSubmit = async (e: any) => {
     e.preventDefault();
@@ -26,8 +30,7 @@ export default function Login() {
         { email, password },
         { withCredentials: true },
       );
-      console.log("res", res);
-      window.location.href = "/chat";
+      router.push("/chat");
     } catch (error) {
       console.log("error", error);
 
