@@ -1,12 +1,32 @@
+"use client";
 import ChatList from "@/components/ChatList";
-import ChatWindow from "@/components/ChatWindow";
 import Image from "next/image";
+
+import { useChat } from "@/context/ChatContext";
+import { api } from "@/lib/api";
 // images
 import profile from "@/public/profile.png";
 
 import { Plus, SendHorizontal } from "lucide-react";
+import { useEffect, useState } from "react";
+import { socket } from "@/lib/socket";
 
 const page = () => {
+  const { selectedUser } = useChat();
+
+  useEffect(() => {
+    socket.emit("join", selectedUser?._id);
+
+    socket.on("receive_message", (msg) => {
+      if (
+        msg.sender === selectedUser?._id ||
+        msg.receiver === selectedUser?._id
+      ) {
+        console.log("send message");
+      }
+    });
+  }, []);
+
   return (
     <div className="flex items-start justify-start gap-2">
       <div className="basis-full md:basis-1/3">

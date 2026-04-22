@@ -13,7 +13,7 @@ const server = createServer(app);
 connectDB();
 
 const io = new Server(server, {
-  cors: { origin: "*" },
+  cors: { origin: "http://localhost:3000", credentials: true },
 });
 
 app.set("io", io);
